@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สร้างงานใหม่ — Task Management Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="proto-bar">
+  <div class="container">
+    <span class="proto-bar__label">PROTOTYPE v1</span>
+    <nav>
+      <a href="index.html">หน้ารวม</a>
+      <a href="login.html">เข้าสู่ระบบ</a>
+      <a href="staff-task-list.html">Staff: รายการงาน</a>
+      <a href="task-create.html" class="current">Staff: สร้างงาน</a>
+      <a href="task-detail-staff.html">Staff: รายละเอียดงาน</a>
+      <a href="task-edit-resubmit.html">Staff: แก้ไข/ส่งใหม่</a>
+      <a href="supervisor-task-list.html">Supervisor: รายการรออนุมัติ</a>
+      <a href="task-detail-supervisor.html">Supervisor: อนุมัติ/ปฏิเสธ</a>
+      <a href="task-detail-supervisor-denied.html">Supervisor: ถูกปฏิเสธสิทธิ์</a>
+    </nav>
+    <span class="proto-bar__fr">FR-01, FR-02, FR-03, NFR-01</span>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="container">
+    <span class="navbar__brand">Task Management</span>
+    <div class="navbar__right">
+      <span class="navbar__user">สมชาย ใจดี <span class="navbar__role-badge">Staff</span></span>
+      <button class="notif-bell" aria-label="การแจ้งเตือน">
+        <span class="notif-bell__icon">&#128276;</span>
+        <span class="notif-bell__count">2</span>
+      </button>
+      <div id="notif-dd" class="notif-dropdown" style="display:none;">
+        <div class="notif-dropdown__header">การแจ้งเตือน</div>
+        <div class="notif-item unread">งาน "ออกแบบหน้าจอรายงานยอดขาย" ถูก Supervisor ปฏิเสธ<span class="notif-item__meta">10 นาทีที่แล้ว</span></div>
+        <div class="notif-item unread">งาน "จัดทำเอกสารคู่มือระบบ" ได้รับการอนุมัติแล้ว<span class="notif-item__meta">1 ชั่วโมงที่แล้ว</span></div>
+      </div>
+      <a class="btn btn-secondary" href="login.html">ออกจากระบบ</a>
+    </div>
+  </div>
+  <script>
+    document.querySelector('.notif-bell').addEventListener('click', function(e){
+      e.stopPropagation();
+      var dd = document.getElementById('notif-dd');
+      dd.style.display = (dd.style.display === 'none' || dd.style.display === '') ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      var dd = document.getElementById('notif-dd');
+      var bell = document.querySelector('.notif-bell');
+      if (dd && !dd.contains(e.target) && !bell.contains(e.target)) { dd.style.display = 'none'; }
+    });
+  </script>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header__text">
+        <h1>สร้างงานใหม่</h1>
+        <p>กรอกรายละเอียดงานให้ครบถ้วน แล้วมอบหมายให้สมาชิกในทีม/โครงการเดียวกัน หรือมอบหมายให้ตนเอง (FR-01, FR-02, FR-03)</p>
+      </div>
+      <a class="btn btn-secondary" href="staff-task-list.html">&larr; กลับไปหน้ารายการงาน</a>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <form class="card">
+          <div class="form-group">
+            <label class="form-label" for="title">ชื่องาน<span class="form-required">*</span></label>
+            <input class="form-control" id="title" type="text" placeholder="เช่น จัดทำเอกสารคู่มือระบบ">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="detail">รายละเอียด (Rich Text)<span class="form-required">*</span></label>
+            <textarea class="form-control" id="detail" placeholder="อธิบายขอบเขตงาน ผลลัพธ์ที่ต้องการ ฯลฯ"></textarea>
+            <span class="form-hint">รองรับการจัดรูปแบบข้อความ (ตัวหนา/รายการ) — จัดเก็บเป็น Rich Text ผูกกับ Task</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="due">กำหนดส่ง (Due Date)<span class="form-required">*</span></label>
+              <input class="form-control" id="due" type="date" value="2026-08-25">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="priority">ระดับความสำคัญ<span class="form-required">*</span></label>
+              <select class="form-control" id="priority">
+                <option>สูง</option>
+                <option selected>กลาง</option>
+                <option>ต่ำ</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>มอบหมายงานให้ (FR-02 / FR-03)</legend>
+            <label class="radio-option">
+              <input type="radio" name="assignee-mode" checked>
+              มอบหมายให้ตนเอง (Self-assign) — อนุญาตเป็นกรณีปกติเสมอ
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="assignee-mode">
+              มอบหมายให้สมาชิกอื่นในทีม/โครงการเดียวกัน
+            </label>
+
+            <div class="form-group" style="margin-top: var(--space-3);">
+              <label class="form-label" for="assignee">เลือกสมาชิก (เฉพาะทีม/โครงการ "ระบบจัดการงานภายใน")</label>
+              <select class="form-control" id="assignee">
+                <option>-- ตนเอง (สมชาย ใจดี) --</option>
+                <option>สมหญิง รักงาน (สมาชิกทีมเดียวกัน)</option>
+                <option>ประเสริฐ มั่นคง (สมาชิกทีมเดียวกัน)</option>
+              </select>
+              <span class="form-hint">
+                ระบบตรวจสอบสิทธิ์ทุกครั้งก่อนบันทึกการมอบหมาย (NFR-01) — รายชื่อที่แสดงจำกัดเฉพาะ
+                สมาชิกในทีม/โครงการเดียวกับผู้สร้างงานเท่านั้น ไม่แสดงสมาชิกทีมอื่น
+              </span>
+            </div>
+          </fieldset>
+
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary">สร้างงานและมอบหมาย</button>
+            <a class="btn btn-secondary" href="staff-task-list.html">ยกเลิก</a>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>สถานะเริ่มต้นเมื่อสร้างงาน</h3>
+          <p style="font-size:var(--text-sm); color:var(--gray-600);">
+            เมื่อสร้างงานสำเร็จ ระบบตั้งสถานะเริ่มต้นอัตโนมัติ แล้วเปลี่ยนเป็น "รออนุมัติ" ทันทีที่มอบหมาย
+            งานสำเร็จ (FR-01 → FR-04) และแจ้งเตือน Supervisor ของทีม/โครงการนั้น
+          </p>
+          <span class="badge badge-warning">รออนุมัติ (หลังมอบหมายสำเร็จ)</span>
+        </div>
+
+        <div class="card">
+          <h3>ตัวอย่างสถานะ: ถูกปฏิเสธคำขอมอบหมาย (NFR-01)</h3>
+          <p style="font-size:var(--text-sm); color:var(--gray-600); margin-bottom: var(--space-3);">
+            สาธิตกรณีระบบตรวจพบว่าผู้ถูกมอบหมายไม่ได้อยู่ในทีม/โครงการเดียวกัน (เช่น ถูกส่งคำขอโดยตรงผ่าน
+            ช่องทางอื่นข้ามค่าที่แสดงในฟอร์ม) ระบบต้องปฏิเสธคำขอทุกกรณีตาม NFR-01
+          </p>
+          <div class="alert alert-danger" style="margin-bottom:0;">
+            <span class="alert__icon">&#9888;</span>
+            <span>
+              <strong>ไม่สามารถมอบหมายงานนี้ได้</strong><br>
+              ผู้ใช้ที่เลือก ("วิชัย นอกทีม") ไม่ได้เป็นสมาชิกของทีม/โครงการเดียวกับงานนี้
+              กรุณาเลือกสมาชิกในทีม/โครงการเดียวกัน หรือมอบหมายให้ตนเอง
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

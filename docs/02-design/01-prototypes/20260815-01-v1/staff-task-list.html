@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายการงานของฉัน (Staff) — Task Management Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="proto-bar">
+  <div class="container">
+    <span class="proto-bar__label">PROTOTYPE v1</span>
+    <nav>
+      <a href="index.html">หน้ารวม</a>
+      <a href="login.html">เข้าสู่ระบบ</a>
+      <a href="staff-task-list.html" class="current">Staff: รายการงาน</a>
+      <a href="task-create.html">Staff: สร้างงาน</a>
+      <a href="task-detail-staff.html">Staff: รายละเอียดงาน</a>
+      <a href="task-edit-resubmit.html">Staff: แก้ไข/ส่งใหม่</a>
+      <a href="supervisor-task-list.html">Supervisor: รายการรออนุมัติ</a>
+      <a href="task-detail-supervisor.html">Supervisor: อนุมัติ/ปฏิเสธ</a>
+      <a href="task-detail-supervisor-denied.html">Supervisor: ถูกปฏิเสธสิทธิ์</a>
+    </nav>
+    <span class="proto-bar__fr">FR-01 (จุดเริ่ม), แสดงผลสถานะจาก FR-04/FR-05/FR-06</span>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="container">
+    <span class="navbar__brand">Task Management</span>
+    <div class="navbar__right">
+      <span class="navbar__user">สมชาย ใจดี <span class="navbar__role-badge">Staff</span></span>
+      <button class="notif-bell" aria-label="การแจ้งเตือน">
+        <span class="notif-bell__icon">&#128276;</span>
+        <span class="notif-bell__count">2</span>
+      </button>
+      <div id="notif-dd" class="notif-dropdown" style="display:none;">
+        <div class="notif-dropdown__header">การแจ้งเตือน</div>
+        <div class="notif-item unread">
+          งาน "ออกแบบหน้าจอรายงานยอดขาย" ถูก Supervisor ปฏิเสธ
+          <span class="notif-item__meta">10 นาทีที่แล้ว</span>
+        </div>
+        <div class="notif-item unread">
+          งาน "จัดทำเอกสารคู่มือระบบ" ได้รับการอนุมัติแล้ว
+          <span class="notif-item__meta">1 ชั่วโมงที่แล้ว</span>
+        </div>
+      </div>
+      <a class="btn btn-secondary" href="login.html">ออกจากระบบ</a>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('click', function(e){
+      var dd = document.getElementById('notif-dd');
+      var bell = document.querySelector('.notif-bell');
+      if (dd && !dd.contains(e.target) && !bell.contains(e.target)) { dd.style.display = 'none'; }
+    });
+    document.querySelector('.notif-bell').addEventListener('click', function(e){
+      e.stopPropagation();
+      var dd = document.getElementById('notif-dd');
+      dd.style.display = (dd.style.display === 'none' || dd.style.display === '') ? 'block' : 'none';
+    });
+  </script>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header__text">
+        <h1>งานของฉัน</h1>
+        <p>งานที่คุณสร้างหรือถูกมอบหมายในทีม/โครงการ "ระบบจัดการงานภายใน"</p>
+      </div>
+      <a class="btn btn-primary" href="task-create.html">+ สร้างงานใหม่</a>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-tile stat-tile--warning">
+        <div class="stat-tile__value">3</div>
+        <div class="stat-tile__label">รออนุมัติ</div>
+      </div>
+      <div class="stat-tile stat-tile--info">
+        <div class="stat-tile__value">5</div>
+        <div class="stat-tile__label">รอดำเนินการ</div>
+      </div>
+      <div class="stat-tile stat-tile--danger">
+        <div class="stat-tile__value">1</div>
+        <div class="stat-tile__label">ถูกปฏิเสธ</div>
+      </div>
+      <div class="stat-tile stat-tile--success">
+        <div class="stat-tile__value">8</div>
+        <div class="stat-tile__label">เสร็จสิ้น</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-chip is-active">ทั้งหมด</span>
+      <span class="filter-chip">รออนุมัติ</span>
+      <span class="filter-chip">รอดำเนินการ</span>
+      <span class="filter-chip">ถูกปฏิเสธ</span>
+    </div>
+
+    <div class="task-list">
+      <a class="task-row" href="task-detail-staff.html">
+        <div class="task-row__main">
+          <span class="task-row__title">จัดทำเอกสารคู่มือระบบ</span>
+          <span class="task-row__meta">มอบหมายให้: สมหญิง รักงาน · กำหนดส่ง: 20 ส.ค. 2569 · ความสำคัญ: กลาง</span>
+        </div>
+        <div class="task-row__side">
+          <span class="badge badge-info">รอดำเนินการ</span>
+        </div>
+      </a>
+
+      <a class="task-row" href="task-detail-staff.html">
+        <div class="task-row__main">
+          <span class="task-row__title">ออกแบบหน้าจอรายงานยอดขาย</span>
+          <span class="task-row__meta">มอบหมายให้: ตนเอง (Self-assign) · กำหนดส่ง: 18 ส.ค. 2569 · ความสำคัญ: สูง</span>
+        </div>
+        <div class="task-row__side">
+          <span class="badge badge-danger">ถูกปฏิเสธ</span>
+        </div>
+      </a>
+
+      <div class="task-row">
+        <div class="task-row__main">
+          <span class="task-row__title">สรุปข้อมูลลูกค้ารายเดือน</span>
+          <span class="task-row__meta">มอบหมายให้: ประเสริฐ มั่นคง · กำหนดส่ง: 25 ส.ค. 2569 · ความสำคัญ: ต่ำ</span>
+        </div>
+        <div class="task-row__side">
+          <span class="badge badge-warning">รออนุมัติ</span>
+        </div>
+      </div>
+
+      <div class="task-row">
+        <div class="task-row__main">
+          <span class="task-row__title">ตรวจสอบสต๊อกสินค้าคลัง B</span>
+          <span class="task-row__meta">มอบหมายให้: ตนเอง (Self-assign) · กำหนดส่ง: 22 ส.ค. 2569 · ความสำคัญ: กลาง</span>
+        </div>
+        <div class="task-row__side">
+          <span class="badge badge-success">เสร็จสิ้น</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="form-hint" style="margin-top: var(--space-4);">
+      ตัวอย่างสถานะทั้ง 4 นี้สาธิตผลของ FR-04 (ตั้งสถานะ "รออนุมัติ"), FR-05 (อนุมัติ → "รอดำเนินการ")
+      และ FR-06 (ปฏิเสธ → "ถูกปฏิเสธ") — คลิกแถวเพื่อดูรายละเอียด (ตัวอย่างเชื่อมเฉพาะ 2 แถวแรก)
+    </p>
+  </div>
+</main>
+
+</body>
+</html>

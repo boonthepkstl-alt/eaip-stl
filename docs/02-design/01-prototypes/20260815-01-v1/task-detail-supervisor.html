@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายละเอียดงาน (มุมมอง Supervisor) — Task Management Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="proto-bar">
+  <div class="container">
+    <span class="proto-bar__label">PROTOTYPE v1</span>
+    <nav>
+      <a href="index.html">หน้ารวม</a>
+      <a href="login.html">เข้าสู่ระบบ</a>
+      <a href="staff-task-list.html">Staff: รายการงาน</a>
+      <a href="task-create.html">Staff: สร้างงาน</a>
+      <a href="task-detail-staff.html">Staff: รายละเอียดงาน</a>
+      <a href="task-edit-resubmit.html">Staff: แก้ไข/ส่งใหม่</a>
+      <a href="supervisor-task-list.html">Supervisor: รายการรออนุมัติ</a>
+      <a href="task-detail-supervisor.html" class="current">Supervisor: อนุมัติ/ปฏิเสธ</a>
+      <a href="task-detail-supervisor-denied.html">Supervisor: ถูกปฏิเสธสิทธิ์</a>
+    </nav>
+    <span class="proto-bar__fr">FR-05, FR-06, NFR-02</span>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="container">
+    <span class="navbar__brand">Task Management</span>
+    <div class="navbar__right">
+      <span class="navbar__user">ประภา ดูแลทีม <span class="navbar__role-badge">Supervisor</span></span>
+      <button class="notif-bell" aria-label="การแจ้งเตือน">
+        <span class="notif-bell__icon">&#128276;</span>
+        <span class="notif-bell__count">3</span>
+      </button>
+      <div id="notif-dd" class="notif-dropdown" style="display:none;">
+        <div class="notif-dropdown__header">การแจ้งเตือน</div>
+        <div class="notif-item unread">งาน "สรุปข้อมูลลูกค้ารายเดือน" รอการอนุมัติจากคุณ<span class="notif-item__meta">5 นาทีที่แล้ว — FR-04</span></div>
+        <div class="notif-item unread">งาน "ทดสอบระบบชำระเงิน" รอการอนุมัติจากคุณ<span class="notif-item__meta">30 นาทีที่แล้ว — FR-04</span></div>
+        <div class="notif-item unread">งาน "ออกแบบหน้าจอรายงานยอดขาย" ถูกส่งขออนุมัติใหม่ (แก้ไขแล้ว)<span class="notif-item__meta">1 ชั่วโมงที่แล้ว — FR-07</span></div>
+      </div>
+      <a class="btn btn-secondary" href="login.html">ออกจากระบบ</a>
+    </div>
+  </div>
+  <script>
+    document.querySelector('.notif-bell').addEventListener('click', function(e){
+      e.stopPropagation();
+      var dd = document.getElementById('notif-dd');
+      dd.style.display = (dd.style.display === 'none' || dd.style.display === '') ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      var dd = document.getElementById('notif-dd');
+      var bell = document.querySelector('.notif-bell');
+      if (dd && !dd.contains(e.target) && !bell.contains(e.target)) { dd.style.display = 'none'; }
+    });
+  </script>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header__text">
+        <h1>สรุปข้อมูลลูกค้ารายเดือน</h1>
+        <p><span class="badge badge-warning">รออนุมัติ</span> สร้างโดย: สมชาย ใจดี · มอบหมายให้: ประเสริฐ มั่นคง</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#modal-approve">อนุมัติงาน (FR-05)</a>
+        <a class="btn btn-danger" href="#modal-reject">ปฏิเสธงาน (FR-06)</a>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <div class="card">
+          <h3>รายละเอียดงาน</h3>
+          <div class="richtext-box">
+            <p>รวบรวมและสรุปข้อมูลการสั่งซื้อของลูกค้าประจำเดือน สิงหาคม 2569 แยกตามกลุ่มลูกค้า
+            พร้อมจัดทำกราฟเปรียบเทียบกับเดือนก่อนหน้า ส่งให้ทีมขายใช้ประกอบการวางแผน</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>ประวัติสถานะงาน</h3>
+          <ul class="timeline">
+            <li class="is-warning">สร้างงานและมอบหมายให้ ประเสริฐ มั่นคง (สมาชิกทีมเดียวกัน) — สถานะ: รออนุมัติ
+              <span class="timeline__time">15 ส.ค. 2569 10:05 — FR-01, FR-02, FR-04</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>ข้อมูลงาน</h3>
+          <ul class="detail-meta-list">
+            <li><span>ผู้สร้างงาน</span><span>สมชาย ใจดี</span></li>
+            <li><span>ผู้รับมอบหมาย</span><span>ประเสริฐ มั่นคง</span></li>
+            <li><span>ทีม/โครงการ</span><span>ระบบจัดการงานภายใน</span></li>
+            <li><span>กำหนดส่ง</span><span>25 ส.ค. 2569</span></li>
+            <li><span>ระดับความสำคัญ</span><span>ต่ำ</span></li>
+            <li><span>สถานะปัจจุบัน</span><span><span class="badge badge-warning">รออนุมัติ</span></span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>สิทธิ์การอนุมัติ (NFR-02)</h3>
+          <p style="font-size:var(--text-sm); color:var(--gray-600); margin-bottom:0;">
+            คุณมีสิทธิ์ Supervisor ระดับ Project-level ในทีม/โครงการ "ระบบจัดการงานภายใน" ซึ่งตรงกับ
+            ทีม/โครงการของงานนี้ ระบบจึงอนุญาตให้อนุมัติ/ปฏิเสธได้
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal: อนุมัติงาน (FR-05) -->
+<div id="modal-approve" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-box__header">
+      <h2 style="margin:0;">ยืนยันการอนุมัติงาน</h2>
+      <a class="modal-close" href="task-detail-supervisor.html" aria-label="ปิด">&times;</a>
+    </div>
+    <p style="font-size:var(--text-sm); color:var(--gray-600);">
+      เมื่ออนุมัติ ระบบจะเปลี่ยนสถานะงานเป็น "รอดำเนินการ" และแจ้งเตือนผู้ถูกมอบหมาย (ประเสริฐ มั่นคง)
+      ทันที (FR-05)
+    </p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="supervisor-task-list.html">ยืนยันอนุมัติ</a>
+      <a class="btn btn-secondary" href="task-detail-supervisor.html">ยกเลิก</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: ปฏิเสธงาน (FR-06) -->
+<div id="modal-reject" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-box__header">
+      <h2 style="margin:0;">ปฏิเสธงานพร้อมเหตุผล</h2>
+      <a class="modal-close" href="task-detail-supervisor.html" aria-label="ปิด">&times;</a>
+    </div>
+    <form>
+      <div class="form-group">
+        <label class="form-label" for="reject-reason">เหตุผลการปฏิเสธ (Rich Text/comment)<span class="form-required">*</span></label>
+        <textarea class="form-control" id="reject-reason" placeholder="ระบุเหตุผล เช่น ข้อมูลไม่ครบ ต้องแก้ไขขอบเขตงาน ฯลฯ"></textarea>
+        <span class="form-hint">บังคับกรอกเสมอ — ระบบจะบันทึกเป็น comment ผูกกับ Task และแจ้งเตือน Staff ผู้สร้างงานและผู้ถูกมอบหมาย (FR-06)</span>
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-danger" formaction="supervisor-task-list.html">ยืนยันปฏิเสธ</button>
+        <a class="btn btn-secondary" href="task-detail-supervisor.html">ยกเลิก</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายละเอียดงาน (มุมมอง Staff) — Task Management Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="proto-bar">
+  <div class="container">
+    <span class="proto-bar__label">PROTOTYPE v1</span>
+    <nav>
+      <a href="index.html">หน้ารวม</a>
+      <a href="login.html">เข้าสู่ระบบ</a>
+      <a href="staff-task-list.html">Staff: รายการงาน</a>
+      <a href="task-create.html">Staff: สร้างงาน</a>
+      <a href="task-detail-staff.html" class="current">Staff: รายละเอียดงาน</a>
+      <a href="task-edit-resubmit.html">Staff: แก้ไข/ส่งใหม่</a>
+      <a href="supervisor-task-list.html">Supervisor: รายการรออนุมัติ</a>
+      <a href="task-detail-supervisor.html">Supervisor: อนุมัติ/ปฏิเสธ</a>
+      <a href="task-detail-supervisor-denied.html">Supervisor: ถูกปฏิเสธสิทธิ์</a>
+    </nav>
+    <span class="proto-bar__fr">FR-04 (แสดงผล), FR-05/FR-06 (แสดงผล), จุดเข้า FR-07</span>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="container">
+    <span class="navbar__brand">Task Management</span>
+    <div class="navbar__right">
+      <span class="navbar__user">สมชาย ใจดี <span class="navbar__role-badge">Staff</span></span>
+      <button class="notif-bell" aria-label="การแจ้งเตือน">
+        <span class="notif-bell__icon">&#128276;</span>
+        <span class="notif-bell__count">2</span>
+      </button>
+      <div id="notif-dd" class="notif-dropdown" style="display:none;">
+        <div class="notif-dropdown__header">การแจ้งเตือน</div>
+        <div class="notif-item unread">งาน "ออกแบบหน้าจอรายงานยอดขาย" ถูก Supervisor ปฏิเสธ<span class="notif-item__meta">10 นาทีที่แล้ว</span></div>
+        <div class="notif-item unread">งาน "จัดทำเอกสารคู่มือระบบ" ได้รับการอนุมัติแล้ว<span class="notif-item__meta">1 ชั่วโมงที่แล้ว</span></div>
+      </div>
+      <a class="btn btn-secondary" href="login.html">ออกจากระบบ</a>
+    </div>
+  </div>
+  <script>
+    document.querySelector('.notif-bell').addEventListener('click', function(e){
+      e.stopPropagation();
+      var dd = document.getElementById('notif-dd');
+      dd.style.display = (dd.style.display === 'none' || dd.style.display === '') ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      var dd = document.getElementById('notif-dd');
+      var bell = document.querySelector('.notif-bell');
+      if (dd && !dd.contains(e.target) && !bell.contains(e.target)) { dd.style.display = 'none'; }
+    });
+  </script>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header__text">
+        <h1>ออกแบบหน้าจอรายงานยอดขาย</h1>
+        <p><span class="badge badge-danger">ถูกปฏิเสธ</span> โดย Supervisor: ประภา ดูแลทีม เมื่อ 15 ส.ค. 2569 14:20</p>
+      </div>
+      <a class="btn btn-primary" href="task-edit-resubmit.html">แก้ไขและส่งขออนุมัติใหม่ (FR-07)</a>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <div class="card">
+          <h3>เหตุผลการปฏิเสธ</h3>
+          <div class="alert alert-danger">
+            <span class="alert__icon">&#9888;</span>
+            <span>Supervisor ระบุเหตุผล — ดูรายละเอียดด้านล่าง (FR-06)</span>
+          </div>
+          <div class="richtext-box">
+            <p><strong>ประภา ดูแลทีม:</strong> รายละเอียดยังไม่ครบถ้วน กรุณาระบุ mockup ที่อ้างอิง
+            และแก้ไขกำหนดส่งให้สอดคล้องกับรอบรายงานยอดขายประจำเดือน แล้วส่งขออนุมัติใหม่อีกครั้ง</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>รายละเอียดงาน</h3>
+          <div class="richtext-box">
+            <p>ออกแบบหน้าจอสำหรับแสดงรายงานยอดขายรายเดือน ให้ทีมขายใช้ตรวจสอบภาพรวมได้สะดวก
+            ต้องรองรับการกรองตามช่วงเวลาและตัวแทนขาย</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>ประวัติสถานะงาน</h3>
+          <ul class="timeline">
+            <li class="is-warning">สร้างงานและมอบหมายให้ตนเอง (Self-assign) — สถานะ: รออนุมัติ
+              <span class="timeline__time">15 ส.ค. 2569 09:00 — FR-01, FR-03, FR-04</span>
+            </li>
+            <li class="is-danger">Supervisor ปฏิเสธงานพร้อมเหตุผล — สถานะ: ถูกปฏิเสธ
+              <span class="timeline__time">15 ส.ค. 2569 14:20 — FR-06</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>ข้อมูลงาน</h3>
+          <ul class="detail-meta-list">
+            <li><span>ผู้สร้างงาน</span><span>สมชาย ใจดี</span></li>
+            <li><span>ผู้รับมอบหมาย</span><span>สมชาย ใจดี (ตนเอง)</span></li>
+            <li><span>ทีม/โครงการ</span><span>ระบบจัดการงานภายใน</span></li>
+            <li><span>กำหนดส่ง</span><span>18 ส.ค. 2569</span></li>
+            <li><span>ระดับความสำคัญ</span><span>สูง</span></li>
+            <li><span>สถานะปัจจุบัน</span><span><span class="badge badge-danger">ถูกปฏิเสธ</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

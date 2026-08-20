@@ -1,0 +1,371 @@
+<title>Agent Status Board</title>
+<style>
+  :root {
+    --bg: #eef1f0;
+    --surface: #ffffff;
+    --surface-2: #e4e8e7;
+    --text: #16211f;
+    --text-muted: #55625f;
+    --accent: #0f7c6c;
+    --accent-soft: #d9ece8;
+    --border: #d3d9d7;
+    --status-idle: #8a9490;
+    --status-idle-bg: #eceeed;
+    --status-working: #b9760a;
+    --status-working-bg: #faf1de;
+    --status-blocked: #b5482f;
+    --status-blocked-bg: #f8e9e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1513;
+      --surface: #16201d;
+      --surface-2: #1e2a26;
+      --text: #e7edea;
+      --text-muted: #93a39d;
+      --accent: #35c9ae;
+      --accent-soft: #163430;
+      --border: #2a3733;
+      --status-idle: #7c8985;
+      --status-idle-bg: #1e2624;
+      --status-working: #e0a13e;
+      --status-working-bg: #2c2416;
+      --status-blocked: #e07159;
+      --status-blocked-bg: #2c1b17;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1513;
+    --surface: #16201d;
+    --surface-2: #1e2a26;
+    --text: #e7edea;
+    --text-muted: #93a39d;
+    --accent: #35c9ae;
+    --accent-soft: #163430;
+    --border: #2a3733;
+    --status-idle: #7c8985;
+    --status-idle-bg: #1e2624;
+    --status-working: #e0a13e;
+    --status-working-bg: #2c2416;
+    --status-blocked: #e07159;
+    --status-blocked-bg: #2c1b17;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  header.board-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .board-title-group h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .board-title-group p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 46ch;
+  }
+  .eyebrow {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 8px;
+  }
+  .headcount {
+    text-align: right;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .headcount .big {
+    font-size: 2rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .headcount .label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .floor {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .floor-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .floor-head h2 {
+    font-size: 1.05rem;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .floor-head .floor-note {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  .desks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+
+  .desk {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    position: relative;
+  }
+  .desk-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .desk-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .desk-role {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .pill.idle { background: var(--status-idle-bg); color: var(--status-idle); }
+  .pill.working { background: var(--status-working-bg); color: var(--status-working); }
+  .pill.blocked { background: var(--status-blocked-bg); color: var(--status-blocked); }
+
+  .desk-task {
+    font-size: 0.78rem;
+    color: var(--text);
+    border-top: 1px dashed var(--border);
+    padding-top: 8px;
+  }
+  .desk-task .k {
+    color: var(--text-muted);
+  }
+
+  footer.board-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+  footer.board-footer strong { color: var(--text); }
+  footer.board-footer code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.85em;
+  }
+</style>
+
+<div class="page">
+  <header class="board-header">
+    <div class="board-title-group">
+      <p class="eyebrow">tasks-mng &middot; IT floor, session snapshot</p>
+      <h1>Agent Status Board</h1>
+      <p>Every registered agent, shown as a desk on the floor. Status reflects this session only — there is no live process feed behind this page, so it won't update on its own after publishing.</p>
+    </div>
+    <div class="headcount">
+      <div class="big">0<span style="color:var(--text-muted); font-size:1.1rem;"> / 14</span></div>
+      <div class="label">on task right now</div>
+    </div>
+  </header>
+
+  <section class="floor">
+    <div class="floor-head">
+      <h2>Requirements &amp; Planning</h2>
+      <span class="floor-note">spec → backlog → phase/release plan</span>
+    </div>
+    <div class="desks">
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">requirement-writer</div><div class="desk-role">Intake clerk — turns raw asks into FR/NFR spec docs</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> a new raw requirement lands</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">backlog-auditor</div><div class="desk-role">Records clerk — reconciles backlog.md against every spec file</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Last done:</span> audited backlog vs. 01-spec/ — already in sync, no edits</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">phase-planner</div><div class="desk-role">Scheduler — carves backlog into phases &amp; release tasks</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> backlog is stable enough to plan</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="floor">
+    <div class="floor-head">
+      <h2>Design</h2>
+      <span class="floor-note">feature list &amp; journeys → technical spec / test plan / prototype, in parallel</span>
+    </div>
+    <div class="desks">
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">feature-journey-writer</div><div class="desk-role">Groups backlog items into features and user journeys</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> backlog has new/changed items</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">architecture-writer</div><div class="desk-role">Draws component &amp; data-flow diagrams, stack-agnostic</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> feature list changes</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">api-db-writer</div><div class="desk-role">Writes API contract + data model together</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> architecture is settled</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">detailed-design-writer</div><div class="desk-role">Per-feature sequence flows &amp; edge cases</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> api/db spec is settled</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">nfr-reviewer</div><div class="desk-role">Auditor — checks NFRs are actually designed for. Reports only, never edits.</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> a technical-spec review is requested</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">test-writer</div><div class="desk-role">Acceptance criteria, test plan, test cases per feature</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> feature list changes</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">prototype-writer</div><div class="desk-role">Builds clickable HTML mockups from feature list + DESIGN.md</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> a new prototype round is requested</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">prototype-auditor</div><div class="desk-role">Auditor — flags stale prototypes. Reports only, never edits.</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> a prototype freshness check is requested</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="floor">
+    <div class="floor-head">
+      <h2>Development &amp; Testing</h2>
+      <span class="floor-note">real code against the templates — only once a scaffolded project exists</span>
+    </div>
+    <div class="desks">
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">dev-analyst</div><div class="desk-role">Breaks a feature's design into implementation tasks</div></div>
+          <span class="pill blocked">badge pending</span>
+        </div>
+        <div class="desk-task"><span class="k">Blocked on:</span> GitHub/JIRA MCP not yet authorized this session</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">dev-designer</div><div class="desk-role">Maps db-spec to a real schema + real template files</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> dev-analyst hands off a task list</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">dev-coder</div><div class="desk-role">Writes real code against the scaffolded project, with tests</div></div>
+          <span class="pill idle">idle</span>
+        </div>
+        <div class="desk-task"><span class="k">Desk sits empty until:</span> a real project is scaffolded from the templates</div>
+      </div>
+      <div class="desk">
+        <div class="desk-top">
+          <div><div class="desk-name">test-runner</div><div class="desk-role">Runs real tests, files bugs against failures</div></div>
+          <span class="pill blocked">badge pending</span>
+        </div>
+        <div class="desk-task"><span class="k">Blocked on:</span> GitHub/JIRA MCP not yet authorized this session</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="board-footer">
+    <div><strong>How to read this:</strong> "idle" means the agent is registered and ready but nothing has called it this session. "badge pending" means the agent's own job needs a connector (GitHub/Linear/JIRA) that hasn't been authorized yet — that happens outside this chat, via <code>claude mcp</code> or your claude.ai connector settings.</div>
+    <div>Nobody is at a desk right now. Ask for any step above by name — e.g. "sync the backlog" or "build a prototype" — and that desk lights up amber for the length of the task.</div>
+  </footer>
+</div>

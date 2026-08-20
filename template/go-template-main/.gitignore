@@ -1,0 +1,33 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+tmp/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Env File ##
+.env*
+*.env
+app.env
+
+### Test Coverage ##
+coverage*.*
+
+
+
+### Claude ###
+.claude/
+
+## Go
+src/
+deploy*.sh
+
+## Bin
+stl-sale-org*

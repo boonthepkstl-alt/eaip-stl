@@ -1,0 +1,7 @@
+docker exec -t -i some-tarantool console
+
+box.schema.user.create('myusername', { password = 'mysecretpassword' })
+box.schema.user.grant('myusername','read,write,create','universe')
+box.schema.user.grant('myusername','execute','sql')
+
+CREATE TABLE SampleModel ( ID STRING, Column1 STRING, Column2 STRING,  PRIMARY KEY (ID));

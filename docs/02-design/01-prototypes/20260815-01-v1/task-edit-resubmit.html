@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แก้ไขงานที่ถูกปฏิเสธและขออนุมัติใหม่ — Task Management Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="proto-bar">
+  <div class="container">
+    <span class="proto-bar__label">PROTOTYPE v1</span>
+    <nav>
+      <a href="index.html">หน้ารวม</a>
+      <a href="login.html">เข้าสู่ระบบ</a>
+      <a href="staff-task-list.html">Staff: รายการงาน</a>
+      <a href="task-create.html">Staff: สร้างงาน</a>
+      <a href="task-detail-staff.html">Staff: รายละเอียดงาน</a>
+      <a href="task-edit-resubmit.html" class="current">Staff: แก้ไข/ส่งใหม่</a>
+      <a href="supervisor-task-list.html">Supervisor: รายการรออนุมัติ</a>
+      <a href="task-detail-supervisor.html">Supervisor: อนุมัติ/ปฏิเสธ</a>
+      <a href="task-detail-supervisor-denied.html">Supervisor: ถูกปฏิเสธสิทธิ์</a>
+    </nav>
+    <span class="proto-bar__fr">FR-07</span>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="container">
+    <span class="navbar__brand">Task Management</span>
+    <div class="navbar__right">
+      <span class="navbar__user">สมชาย ใจดี <span class="navbar__role-badge">Staff</span></span>
+      <button class="notif-bell" aria-label="การแจ้งเตือน">
+        <span class="notif-bell__icon">&#128276;</span>
+        <span class="notif-bell__count">2</span>
+      </button>
+      <div id="notif-dd" class="notif-dropdown" style="display:none;">
+        <div class="notif-dropdown__header">การแจ้งเตือน</div>
+        <div class="notif-item unread">งาน "ออกแบบหน้าจอรายงานยอดขาย" ถูก Supervisor ปฏิเสธ<span class="notif-item__meta">10 นาทีที่แล้ว</span></div>
+        <div class="notif-item unread">งาน "จัดทำเอกสารคู่มือระบบ" ได้รับการอนุมัติแล้ว<span class="notif-item__meta">1 ชั่วโมงที่แล้ว</span></div>
+      </div>
+      <a class="btn btn-secondary" href="login.html">ออกจากระบบ</a>
+    </div>
+  </div>
+  <script>
+    document.querySelector('.notif-bell').addEventListener('click', function(e){
+      e.stopPropagation();
+      var dd = document.getElementById('notif-dd');
+      dd.style.display = (dd.style.display === 'none' || dd.style.display === '') ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      var dd = document.getElementById('notif-dd');
+      var bell = document.querySelector('.notif-bell');
+      if (dd && !dd.contains(e.target) && !bell.contains(e.target)) { dd.style.display = 'none'; }
+    });
+  </script>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header__text">
+        <h1>แก้ไขงานที่ถูกปฏิเสธและขออนุมัติใหม่</h1>
+        <p>แก้ไขรายละเอียดงานตามเหตุผลที่ Supervisor ระบุ แล้วส่งกลับเข้าสถานะ "รออนุมัติ" อีกครั้ง (FR-07)</p>
+      </div>
+      <a class="btn btn-secondary" href="task-detail-staff.html">&larr; กลับไปหน้ารายละเอียดงาน</a>
+    </div>
+
+    <div class="alert alert-warning">
+      <span class="alert__icon">&#128172;</span>
+      <span><strong>เหตุผลที่ถูกปฏิเสธ (จาก Supervisor):</strong> รายละเอียดยังไม่ครบถ้วน กรุณาระบุ mockup
+      ที่อ้างอิง และแก้ไขกำหนดส่งให้สอดคล้องกับรอบรายงานยอดขายประจำเดือน แล้วส่งขออนุมัติใหม่อีกครั้ง</span>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <form class="card">
+          <div class="form-group">
+            <label class="form-label" for="title">ชื่องาน<span class="form-required">*</span></label>
+            <input class="form-control" id="title" type="text" value="ออกแบบหน้าจอรายงานยอดขาย">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="detail">รายละเอียด (Rich Text)<span class="form-required">*</span></label>
+            <textarea class="form-control" id="detail">ออกแบบหน้าจอสำหรับแสดงรายงานยอดขายรายเดือน อ้างอิง mockup รหัส SD-102 ให้ทีมขายใช้ตรวจสอบภาพรวมได้สะดวก ต้องรองรับการกรองตามช่วงเวลาและตัวแทนขาย</textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="due">กำหนดส่ง (Due Date)<span class="form-required">*</span></label>
+              <input class="form-control" id="due" type="date" value="2026-08-31">
+              <span class="form-hint">แก้ไขให้สอดคล้องกับรอบรายงานยอดขายประจำเดือนตามที่ Supervisor แนะนำ</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="priority">ระดับความสำคัญ<span class="form-required">*</span></label>
+              <select class="form-control" id="priority">
+                <option selected>สูง</option>
+                <option>กลาง</option>
+                <option>ต่ำ</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="assignee">ผู้รับมอบหมาย</label>
+            <select class="form-control" id="assignee">
+              <option selected>-- ตนเอง (สมชาย ใจดี) --</option>
+              <option>สมหญิง รักงาน (สมาชิกทีมเดียวกัน)</option>
+              <option>ประเสริฐ มั่นคง (สมาชิกทีมเดียวกัน)</option>
+            </select>
+            <span class="form-hint">หากเปลี่ยนผู้รับมอบหมาย ระบบยังคงตรวจสอบสิทธิ์ทีม/โครงการซ้ำทุกครั้ง (NFR-01)</span>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary">ส่งขออนุมัติใหม่ (สถานะกลับเป็น "รออนุมัติ")</button>
+            <a class="btn btn-secondary" href="task-detail-staff.html">ยกเลิก</a>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>สิ่งที่จะเกิดขึ้นเมื่อส่งใหม่</h3>
+          <p style="font-size:var(--text-sm); color:var(--gray-600);">
+            ระบบเปลี่ยนสถานะงานกลับเป็น "รออนุมัติ" ทันที และแจ้งเตือน Supervisor ของทีม/โครงการนี้
+            อีกครั้งให้ตรวจสอบ (FR-07 → วนกลับเข้าสู่ FR-05/FR-06)
+          </p>
+          <div class="btn-row" style="align-items:center;">
+            <span class="badge badge-danger">ถูกปฏิเสธ</span>
+            <span aria-hidden="true">&rarr;</span>
+            <span class="badge badge-warning">รออนุมัติ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

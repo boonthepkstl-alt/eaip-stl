@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่ระบบ — Task Management Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="proto-bar">
+  <div class="container">
+    <span class="proto-bar__label">PROTOTYPE v1</span>
+    <nav>
+      <a href="index.html">หน้ารวม</a>
+      <a href="login.html" class="current">เข้าสู่ระบบ</a>
+      <a href="staff-task-list.html">Staff: รายการงาน</a>
+      <a href="task-create.html">Staff: สร้างงาน</a>
+      <a href="task-detail-staff.html">Staff: รายละเอียดงาน</a>
+      <a href="task-edit-resubmit.html">Staff: แก้ไข/ส่งใหม่</a>
+      <a href="supervisor-task-list.html">Supervisor: รายการรออนุมัติ</a>
+      <a href="task-detail-supervisor.html">Supervisor: อนุมัติ/ปฏิเสธ</a>
+      <a href="task-detail-supervisor-denied.html">Supervisor: ถูกปฏิเสธสิทธิ์</a>
+    </nav>
+    <span class="proto-bar__fr">จุดเริ่มต้นของทั้งสอง journey — ยังไม่มีรหัส FR เจาะจง</span>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="login-wrap">
+      <div class="card login-card">
+        <h1>Task Management</h1>
+        <p style="text-align:center; color:var(--gray-600); font-size: var(--text-sm);">
+          เข้าสู่ระบบเพื่อจัดการงานในทีม/โครงการของคุณ
+        </p>
+
+        <div class="form-group" style="margin-top: var(--space-6);">
+          <label class="form-label" for="email">อีเมล<span class="form-required">*</span></label>
+          <input class="form-control" type="email" id="email" placeholder="name@company.com" value="staff01@company.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">รหัสผ่าน<span class="form-required">*</span></label>
+          <input class="form-control" type="password" id="password" value="••••••••">
+        </div>
+
+        <p class="form-hint" style="margin-bottom: var(--space-2);">
+          Prototype: เลือกบทบาทเพื่อจำลองการเข้าสู่ระบบ (ระบบจริงจะตรวจสอบสิทธิ์จากบัญชีผู้ใช้)
+        </p>
+        <div class="role-select">
+          <a class="btn btn-primary btn-block" href="staff-task-list.html">เข้าสู่ระบบเป็น Staff</a>
+          <a class="btn btn-secondary btn-block" href="supervisor-task-list.html">เข้าสู่ระบบเป็น Supervisor</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
